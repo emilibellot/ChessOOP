@@ -1,229 +1,285 @@
-package pieces;
+package Domini.Peces;
 
-import java.util.ArrayList;
+import java.util.*;
+import Domini.Taulell;
+import Domini.Posicio;
 
-import chess.Cell;
+/**
+ * Classe Rei que hereta de Peça
+ *
+ *
+ */
+public class Rei extends Peca{
 
-public class King extends Piece{
-	
-	private int x,y; //Extra variables for King class to keep a track of king's position
-	
-	//King Constructor
-	public King(String i,String p,int c,int x,int y)
-	{
-		setx(x);
-		sety(y);
-		setId(i);
-		setPath(p);
-		setColor(c);
-	}
-	
-	//general value access functions
-	public void setx(int x)
-	{
-		this.x=x;
-	}
-	public void sety(int y)
-	{
-		this.y=y;
-	}
-	public int getx()
-	{
-		return x;
-	}
-	public int gety()
-	{
-		return y;
-	}
-	//Move Function for King Overridden from Pieces
-	public ArrayList<Cell> move(Cell state[][],int x,int y)
-	{
-		//King can move only one step. So all the adjacent 8 cells have been considered.
-		possiblemoves.clear();
-		int posx[]={x,x,x+1,x+1,x+1,x-1,x-1,x-1};
-		int posy[]={y-1,y+1,y-1,y,y+1,y-1,y,y+1};
-		for(int i=0;i<8;i++)
-			if((posx[i]>=0&&posx[i]<8&&posy[i]>=0&&posy[i]<8))
-				if((state[posx[i]][posy[i]].getpiece()==null||state[posx[i]][posy[i]].getpiece().getcolor()!=this.getcolor()))
-					possiblemoves.add(state[posx[i]][posy[i]]);
-		return possiblemoves;
-	}
-	
-	
-	
-	//Function to check if king is under threat
-	//It checks whether there is any piece of opposite color that can attack king for a given board state
-	public boolean isindanger(Cell state[][])
+    //Constructor
+    public Rei(String id, Posicio pos, String color)
     {
-		
-		//Checking for attack from left,right,up and down
-    	for(int i=x+1;i<8;i++)
-    	{
-    		if(state[i][y].getpiece()==null)
-    			continue;
-    		else if(state[i][y].getpiece().getcolor()==this.getcolor())
-    			break;
-    		else
-    		{
-    			if ((state[i][y].getpiece() instanceof Rook) || (state[i][y].getpiece() instanceof Queen))
-    				return true;
-    			else
-    				break;
-    		}
-    	}
-    	for(int i=x-1;i>=0;i--)
-    	{
-    		if(state[i][y].getpiece()==null)
-    			continue;
-    		else if(state[i][y].getpiece().getcolor()==this.getcolor())
-    			break;
-    		else
-    		{
-    			if ((state[i][y].getpiece() instanceof Rook) || (state[i][y].getpiece() instanceof Queen))
-    				return true;
-    			else
-    				break;
-    		}
-    	}
-    	for(int i=y+1;i<8;i++)
-    	{
-    		if(state[x][i].getpiece()==null)
-    			continue;
-    		else if(state[x][i].getpiece().getcolor()==this.getcolor())
-    			break;
-    		else
-    		{
-    			if ((state[x][i].getpiece() instanceof Rook) || (state[x][i].getpiece() instanceof Queen))
-    				return true;
-    			else
-    				break;
-    		}
-    	}
-    	for(int i=y-1;i>=0;i--)
-    	{
-    		if(state[x][i].getpiece()==null)
-    			continue;
-    		else if(state[x][i].getpiece().getcolor()==this.getcolor())
-    			break;
-    		else
-    		{
-    			if ((state[x][i].getpiece() instanceof Rook) || (state[x][i].getpiece() instanceof Queen))
-    				return true;
-    			else
-    				break;
-    		}
-    	}
-    	
-    	//checking for attack from diagonal direction
-    	int tempx=x+1,tempy=y-1;
-		while(tempx<8&&tempy>=0)
-		{
-			if(state[tempx][tempy].getpiece()==null)
-			{
-				tempx++;
-				tempy--;
-			}
-			else if(state[tempx][tempy].getpiece().getcolor()==this.getcolor())
-				break;
-			else
-			{
-				if (state[tempx][tempy].getpiece() instanceof Bishop || state[tempx][tempy].getpiece() instanceof Queen)
-    				return true;
-    			else
-    				break;
-			}
-		}
-		tempx=x-1;tempy=y+1;
-		while(tempx>=0&&tempy<8)
-		{
-			if(state[tempx][tempy].getpiece()==null)
-			{
-				tempx--;
-				tempy++;
-			}
-			else if(state[tempx][tempy].getpiece().getcolor()==this.getcolor())
-				break;
-			else
-			{
-				if (state[tempx][tempy].getpiece() instanceof Bishop || state[tempx][tempy].getpiece() instanceof Queen)
-    				return true;
-    			else
-    				break;
-			}
-		}
-		tempx=x-1;tempy=y-1;
-		while(tempx>=0&&tempy>=0)
-		{
-			if(state[tempx][tempy].getpiece()==null)
-			{
-				tempx--;
-				tempy--;
-			}
-			else if(state[tempx][tempy].getpiece().getcolor()==this.getcolor())
-				break;
-			else
-			{
-				if (state[tempx][tempy].getpiece() instanceof Bishop || state[tempx][tempy].getpiece() instanceof Queen)
-    				return true;
-    			else
-    				break;
-			}
-		}
-		tempx=x+1;tempy=y+1;
-		while(tempx<8&&tempy<8)
-		{
-			if(state[tempx][tempy].getpiece()==null)
-			{
-				tempx++;
-				tempy++;
-			}
-			else if(state[tempx][tempy].getpiece().getcolor()==this.getcolor())
-				break;
-			else
-			{
-				if (state[tempx][tempy].getpiece() instanceof Bishop || state[tempx][tempy].getpiece() instanceof Queen)
-    				return true;
-    			else
-    				break;
-			}
-		}
-		
-		//Checking for attack from the Knight of opposite color
-		int posx[]={x+1,x+1,x+2,x+2,x-1,x-1,x-2,x-2};
-		int posy[]={y-2,y+2,y-1,y+1,y-2,y+2,y-1,y+1};
-		for(int i=0;i<8;i++)
-			if((posx[i]>=0&&posx[i]<8&&posy[i]>=0&&posy[i]<8))
-				if(state[posx[i]][posy[i]].getpiece()!=null && state[posx[i]][posy[i]].getpiece().getcolor()!=this.getcolor() && (state[posx[i]][posy[i]].getpiece() instanceof Knight))
-				{
-					return true;
-				}
-		
-		
-		//Checking for attack from the Pawn of opposite color
-		int pox[]={x+1,x+1,x+1,x,x,x-1,x-1,x-1};
-		int poy[]={y-1,y+1,y,y+1,y-1,y+1,y-1,y};
-		{
-			for(int i=0;i<8;i++)
-				if((pox[i]>=0&&pox[i]<8&&poy[i]>=0&&poy[i]<8))
-					if(state[pox[i]][poy[i]].getpiece()!=null && state[pox[i]][poy[i]].getpiece().getcolor()!=this.getcolor() && (state[pox[i]][poy[i]].getpiece() instanceof King))
-					{
-						return true;
-					}
-		}
-		if(getcolor()==0)
-		{
-			if(x>0&&y>0&&state[x-1][y-1].getpiece()!=null&&state[x-1][y-1].getpiece().getcolor()==1&&(state[x-1][y-1].getpiece() instanceof Pawn))
-				return true;
-			if(x>0&&y<7&&state[x-1][y+1].getpiece()!=null&&state[x-1][y+1].getpiece().getcolor()==1&&(state[x-1][y+1].getpiece() instanceof Pawn))
-				return true;
-		}
-		else
-		{
-			if(x<7&&y>0&&state[x+1][y-1].getpiece()!=null&&state[x+1][y-1].getpiece().getcolor()==0&&(state[x+1][y-1].getpiece() instanceof Pawn))
-				return true;
-			if(x<7&&y<7&&state[x+1][y+1].getpiece()!=null&&state[x+1][y+1].getpiece().getcolor()==0&&(state[x+1][y+1].getpiece() instanceof Pawn))
-				return true;
-		}
-    	return false;
+        super(id, pos, color);
+    }
+    
+    //Un Rei pot abançar una casella en qualsevol direcció, sempre i quan no estigui amenaçada de hake.
+
+    public ArrayList<Posicio> moviments(Taulell t)
+    {
+        ArrayList<Posicio> movimentspossibles = new ArrayList();
+        int x = pos.consultarX();
+        int y = pos.consultarY();
+        Posicio p;
+
+        int aux_x[] = {x, x, x+1, x+1, x+1, x-1, x-1, x-1};
+        int aux_y[] = {y-1, y+1, y-1, y, y+1, y-1, y, y+1};
+
+        for(int i = 0; i < 8; i++) {
+            //Si pos pes troba dins del taulell...
+            p = new Posicio(aux_x[i], aux_y[i]);
+            if ((p.consultarX() >= 0 && p.consultarX() < 8 && p.consultarY() >= 0 && p.consultarY() < 8))
+                //Si pos p està buida o està ocupada per una peça enemiga
+                if ((t.consultarCela(p) == null) || !(t.consultarCela(p).consultarColor().equals(color)))
+                    movimentspossibles.add(p);
+        }
+        return movimentspossibles;
+        //Retorna la llista de posicions on pot moure's un Rei determinat.
+    }
+
+    //Funció que vigila que el Rei no estigui en hake.
+    //Comprova si hi ha alguna peça enemiga que estigui amenaçant el Rei per a un estat del taulell donat.
+    public boolean hakealrey(Taulell t)
+    {
+        int x = pos.consultarX();
+        int y = pos.consultarY();
+        Posicio p;
+        //Vigila un atac per davant, derrera, dreta i esquerra
+        for(int i = x+1; i < 8; i++)
+        {
+            p = new Posicio(i, y);
+            //Si pos p està buida ...
+            if(t.consultarCela(p) == null) continue;
+
+            //Si pos p està ocupada per una peça amiga ...
+            else if(t.consultarCela(p).consultarColor().equals(color)) break;
+
+            //Si pos p està ocupada per una peça enemiga ...
+            else
+            {
+                //Si la peça enemiga és una Torre o una Reina, el Rei esta en hake
+                if ((t.consultarCela(p) instanceof Torre) || (t.consultarCela(p) instanceof Reina)) return true;
+                else break;
+            }
+        }
+
+        for(int i = x-1; i >= 0; i--)
+        {
+            p = new Posicio(i, y);
+            //Si pos p està buida ...
+            if(t.consultarCela(p) == null) continue;
+
+            //Si pos p està ocupada per una peça amiga ...
+            else if(t.consultarCela(p).consultarColor().equals(color)) break;
+
+            //Si pos p està ocupada per una peça enemiga ...
+            else
+            {
+                //Si la peça enemiga és una Torre o una Reina, el Rei esta en hake
+                if ((t.consultarCela(p) instanceof Torre) || (t.consultarCela(p) instanceof Reina)) return true;
+                else break;
+            }
+        }
+
+        for(int i = y+1; i < 8; i++)
+        {
+            p = new Posicio(x, i);
+            //Si pos p està buida ...
+            if(t.consultarCela(p) == null) continue;
+
+            //Si pos p està ocupada per una peça amiga ...
+            else if(t.consultarCela(p).consultarColor().equals(color)) break;
+
+            //Si pos p està ocupada per una peça enemiga ...
+            else
+            {
+                //Si la peça enemiga és una Torre o una Reina, el Rei esta en hake
+                if ((t.consultarCela(p) instanceof Torre) || (t.consultarCela(p) instanceof Reina)) return true;
+                else break;
+            }
+        }
+
+        for(int i = y-1; i >= 0; i--)
+        {
+            p = new Posicio(x, i);
+            //Si pos p està buida ...
+            if(t.consultarCela(p) == null) continue;
+
+            //Si posnova[x][i] està ocupada per una peça amiga ...
+            else if(t.consultarCela(p).consultarColor().equals(color)) break;
+
+            //Si pos p està ocupada per una peça enemiga ...
+            else
+            {
+                //Si la peça enemiga és una Torre o una Reina, el Rei esta en hake
+                if ((t.consultarCela(p) instanceof Torre) || (t.consultarCela(p) instanceof Reina)) return true;
+                else break;
+            }
+        }
+
+        //Vigila atacs diagonals
+        int aux_x = x+1;
+        int aux_y = y-1;
+        p = new Posicio(aux_x, aux_y);
+
+        while(p.consultarX() < 8 && p.consultarY() >= 0)
+        {
+            //Si pos p està buida ...
+            if(t.consultarCela(p) == null)
+            {
+                aux_x++;
+                aux_y--;
+                p = new Posicio(aux_x, aux_y);
+            }
+
+            //Si pos p està ocupada per una peça amiga ...
+            else if(t.consultarCela(p).consultarColor().equals(color)) break;
+
+            //Si pos p està ocupada per una peça enemiga ...
+            else
+            {
+                //Si la peça enemiga és una Alfil o una Reina, el Rei esta en hake
+                if (t.consultarCela(p) instanceof Alfil || t.consultarCela(p) instanceof Reina) return true;
+                else break;
+            }
+        }
+
+        aux_x = x-1;
+        aux_y = y+1;
+        p = new Posicio(aux_x, aux_y);
+
+        while(p.consultarX() >= 0 && p.consultarY() < 8)
+        {
+            //Si pos p està buida ...
+            if(t.consultarCela(p) == null)
+            {
+                aux_x--;
+                aux_y++;
+                p = new Posicio(aux_x, aux_y);
+            }
+
+            //Si pos p està ocupada per una peça amiga ...
+            else if(t.consultarCela(p).consultarColor().equals(color)) break;
+
+            //Si pos p està ocupada per una peça enemiga ...
+            else
+            {
+                //Si la peça enemiga és una Alfil o una Reina, el Rei esta en hake
+                if (t.consultarCela(p) instanceof Alfil || t.consultarCela(p) instanceof Reina) return true;
+                else break;
+            }
+        }
+
+        aux_x = x-1;
+        aux_y = y-1;
+        p = new Posicio(aux_x, aux_y);
+
+        while(p.consultarX() >= 0 && p.consultarY() >= 0)
+        {
+            //Si posnova[aux_x][aux_y] està buida ...
+            if(t.consultarCela(p) == null)
+            {
+                aux_x--;
+                aux_y--;
+                p = new Posicio(aux_x, aux_y);
+            }
+
+            //Si pos p està ocupada per una peça amiga ...
+            else if(t.consultarCela(p).consultarColor().equals(color)) break;
+
+            //Si pos p està ocupada per una peça enemiga ...
+            else
+            {
+                //Si la peça enemiga és una Alfil o una Reina, el Rei esta en hake
+                if (t.consultarCela(p) instanceof Alfil || t.consultarCela(p) instanceof Reina) return true;
+                else break;
+            }
+        }
+        aux_x = x+1;
+        aux_y = y+1;
+        p = new Posicio(aux_x, aux_y);
+
+        while(p.consultarX() < 8 && p.consultarY() < 8)
+        {
+            //Si pos p està buida ...
+            if(t.consultarCela(p) == null)
+            {
+                aux_x++;
+                aux_y++;
+                p = new Posicio(aux_x, aux_y);
+            }
+
+            //Si pos p està ocupada per una peça amiga ...
+            else if(t.consultarCela(p).consultarColor().equals(color)) break;
+
+            //Si pos p està ocupada per una peça enemiga ...
+            else
+            {
+                //Si la peça enemiga és una Alfil o una Reina, el Rei esta en hake
+                if (t.consultarCela(p) instanceof Alfil || t.consultarCela(p) instanceof Reina) return true;
+                else break;
+            }
+        }
+
+        //Vigila atacs de Cavall
+        int posx[] = { x+1, x+1, x+2, x+2, x-1, x-1, x-2, x-2};
+        int posy[] = { y-2, y+2, y-1, y+1, y-2, y+2, y-1, y+1};
+
+        for(int i = 0; i < 8; i++) {
+            p = new Posicio(posx[i], posy[i]);
+            //Si pos p es troba dins del taulell...
+            if ((p.consultarX() >= 0 && p.consultarX() < 8 && p.consultarY() >= 0 && p.consultarY() < 8))
+
+                //Si pos p està ocupada per un Cavall enemic ...
+                if ((t.consultarCela(p) != null) && !(t.consultarCela(p).consultarColor().equals(color)) && (t.consultarCela(p) instanceof Cavall))
+                    return true;
+        }
+
+        //Vigila atacs de Peo
+        int pox[] = { x+1, x+1, x+1, x, x, x-1, x-1, x-1};
+        int poy[] = { y-1, y+1, y, y+1, y-1, y+1, y-1, y};
+
+        for(int i = 0; i < 8; i++)
+            p = new Posicio(pox[i], poy[i]);
+            //Si pos p es troba dins del taulell...
+            if(p.consultarX() >= 0 && p.consultarX() < 8 && p.consultarY() >= 0 && p.consultarY() < 8){
+
+                //Si pos p està ocupada per el Rei enemic ...
+                if ((t.consultarCela(p) != null) && !(t.consultarCela(p).consultarColor().equals(color)) && (t.consultarCela(p) instanceof Rei))
+                    return true;
+            }
+
+        //Si el Rei es blanc
+        if(this.color.equals("blanc"))
+        {
+            p = new Posicio(x-1, y-1);
+            //Si la pos p està ocupada per un Peo negre ...
+            if(p.consultarX() > 0 && p.consultarY() > 0 && t.consultarCela(p) != null && t.consultarCela(p).consultarColor().equals("negre") && (t.consultarCela(p) instanceof Peo))
+                return true;
+
+            p = new Posicio(x-1, y+1);
+            //Si la pos p està ocupada per un Peo negre ...
+            if(p.consultarX() > 0 && p.consultarY() < 7 && t.consultarCela(p) != null && t.consultarCela(p).consultarColor().equals("negre") && (t.consultarCela(p) instanceof Peo))
+                return true;
+        }
+
+        //Si el Rei es negre
+        else
+        {
+            p = new Posicio(x+1, y-1);
+            //Si la pos p està ocupada per un Peo blanc ...
+            if(p.consultarX() < 7 && p.consultarY() > 0 && t.consultarCela(p) != null && t.consultarCela(p).consultarColor().equals("blanc") && (t.consultarCela(p) instanceof Peo))
+                return true;
+
+            p = new Posicio(x+1, y+1);
+            //Si la pos p està ocupada per un Peo blanc ...
+            if(p.consultarX() < 7 && p.consultarY() < 7 && t.consultarCela(p) != null && t.consultarCela(p).consultarColor().equals("blanc") && (t.consultarCela(p) instanceof Peo))
+                return true;
+        }
+        return false;
     }
 }
